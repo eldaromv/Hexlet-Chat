@@ -4,6 +4,9 @@ install:
 start:
 	npx start-server -s ./build
 
+front:
+	npm run start
+
 lint:
 	npx eslint .
 
