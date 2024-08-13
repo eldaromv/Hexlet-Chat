@@ -4,7 +4,7 @@ const NotFound = () => {
       <div className="text-center">
         {text}
       </div>
-    );
+  );
   };
-  
+
   export default NotFound;
