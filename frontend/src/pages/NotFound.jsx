@@ -3,7 +3,7 @@ const NotFound = () => {
   return (
     <div className="text-center">
       {text}
-        </div>
+    </div>
   );
 };
 
