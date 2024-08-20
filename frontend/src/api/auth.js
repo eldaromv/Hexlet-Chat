@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import setHeaders from '../helpers/setHeaders';
 
@@ -14,9 +15,17 @@ export const authApi = createApi({
         body: user,
       }),
     }),
+    signup: builder.mutation({
+      query: ({ username, password }) => ({
+        method: 'POST',
+        url: '/signup',
+        body: { username, password },
+      }),
+    }),
   }),
 });
 
 export const {
   useLoginMutation,
+  useSignupMutation,
 } = authApi;
