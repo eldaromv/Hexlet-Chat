@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import useAuth from '../hooks';
 import { useLoginMutation } from '../api/auth';
@@ -30,17 +31,17 @@ const Login = () => {
     }
     if (error) {
       switch (error.status) {
-        case 401: {
-          setErrors({ password: t('form.errors.password') });
-          break;
-        }
-        case 'FETCH_ERROR': {
-          setErrors({ web: 'errorNetwork' });
-          break;
-        }
-        default: {
-          setErrors({ password: t('form.errors.password') });
-        }
+      case 401: {
+        setErrors({ password: t('form.errors.password') });
+        break;
+      }
+      case 'FETCH_ERROR': {
+        toast.error(t('toast.errorNetwork'));
+        break;
+      }
+      default: {
+        setErrors({ password: t('form.errors.password') });
+      }
       }
     }
   };
