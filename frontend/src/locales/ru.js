@@ -36,9 +36,9 @@ export default {
         rename: 'Переименовать',
       },
     },
-    messages: {
-      messages: 'сообщения',
-    },
+    messages_one: '{{count}} сообщение',
+    messages_few: '{{count}} сообщения',
+    messages_many: '{{count}} сообщений',
     modals: {
       titleRenameChannel: 'Переименовать канал',
       titleDeleteChannel: 'Удалить канал',
@@ -51,7 +51,7 @@ export default {
         newMessage: 'Новое сообщение',
       },
       placeholders: {
-        message: 'Введите сообщение...',
+        message: 'Новое сообщение',
       },
       buttons: {
         submit: 'Отправить',

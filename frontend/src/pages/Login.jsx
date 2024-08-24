@@ -27,15 +27,14 @@ const Login = () => {
     const { data, error } = await login(user);
     if (data) {
       logIn(data.token, nickname);
-      navigate('/');
+      navigate(appPaths.home());
     }
     if (error) {
       switch (error.status) {
       case 401: {
         setErrors({ password: t('form.errors.password') });
         break;
-      }
-      case 'FETCH_ERROR': {
+      } case 'FETCH_ERROR': {
         toast.error(t('toast.errorNetwork'));
         break;
       }
