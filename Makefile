@@ -5,7 +5,7 @@ start:
 	npx start-server -s ./frontend/build
 
 build:
-	cd frontend && npm run build
+	cd frontend && npm install react-scripts && npm run build
 
 lint:
 	npx eslint .
