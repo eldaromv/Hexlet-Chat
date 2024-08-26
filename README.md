@@ -1,7 +1,7 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/eldaromv/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/eldaromv/frontend-project-12/actions)
 <a href="https://codeclimate.com/github/eldaromv/frontend-project-12/maintainability"><img src="https://api.codeclimate.com/v1/badges/3860f7c18f371cf175b8/maintainability" /></a>
-![ESLint](https://github.com/eldaromv/frontend-project-12.git/actions/workflows/eslint.yml/badge.svg)
+![ESLint](https://github.com/eldaromv/frontend-project-12/actions/workflows/eslint.yml/badge.svg)
 
 
 https://frontend-project-12-x0nw.onrender.com
