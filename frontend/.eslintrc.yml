@@ -20,7 +20,7 @@ plugins:
   - functional
 
 rules:
-  eol-last: ["error", "never"]
+  eol-last: ["error", "always"]
   indent: ["error", 2]
   import/extensions: 0
   import/no-unresolved: 0
