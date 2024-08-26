@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import useAuth from '../hooks';
+import { appPaths } from '../routes';
 
 const Header = () => {
   const { logOut } = useAuth();
@@ -18,7 +19,7 @@ const Header = () => {
     <Navbar expand="lg" className="shadow-sm bg-white">
       <Container>
         <Navbar.Brand>
-          <Link className="text-decoration-none text-black" to="/">Hexlet Chat</Link>
+          <Link className="text-decoration-none text-black" to={appPaths.home()}>Hexlet Chat</Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
