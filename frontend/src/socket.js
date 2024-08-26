@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:3000';
+const url = 'http://localhost:3000';
+const URL = process.env.NODE_ENV === 'production' ? undefined : url;
 const socket = io(URL);
 
 export default socket;

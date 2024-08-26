@@ -12,7 +12,7 @@ const appPaths = {
   home: () => '/',
   login: () => '/login',
   signup: () => '/signup',
-  notFound: () => '*',
+  notFound: () => '/not-found',
 };
 
 export { apiPaths, appPaths };
