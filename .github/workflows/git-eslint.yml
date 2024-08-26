@@ -23,4 +23,6 @@ jobs:
       run: npm ci
 
     - name: Run ESLint
-      run: npx eslint .
+      run: 
+        cd frontend
+        npx eslint .
