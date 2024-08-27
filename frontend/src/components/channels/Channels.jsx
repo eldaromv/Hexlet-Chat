@@ -10,10 +10,9 @@ import {
   useGetChannelsQuery,
 } from '../../api/channels';
 import Channel from './Channel';
-import { changeChannel, setChannelModal } from '../../store/slices/appSlice';
+import { changeChannel, setChannelModal, setUserData } from '../../store/slices/appSlice';
 import ModalContainer from '../modals';
 import socket from '../../socket';
-import useAuth from '../../hooks';
 import { appPaths } from '../../routes';
 
 const Channels = () => {
@@ -22,7 +21,6 @@ const Channels = () => {
   const dispatch = useDispatch();
   const currentChannelId = useSelector((state) => state.app.currentChannelId);
   const navigate = useNavigate();
-  const { logOut } = useAuth();
   const defaultChannel = { id: '1', name: 'general' };
 
   const handleShowModal = (modalName, channel = { id: '', name: '' }) => {
@@ -35,7 +33,9 @@ const Channels = () => {
 
   useEffect(() => {
     if (channelError?.status === 401) {
-      logOut();
+      dispatch(setUserData({ nickname: '', token: null }));
+      localStorage.removeItem('token');
+      localStorage.removeItem('nickname');
       navigate(appPaths.login());
     }
 
@@ -66,7 +66,7 @@ const Channels = () => {
       socket.off('removeChannel');
       socket.off('renameChannel');
     };
-  }, [dispatch, channelError, navigate, logOut]);
+  }, [dispatch, channelError, navigate]);
 
   return (
     <Col xs="4" md="2" className="border-end px-0 bg-light flex-column h-100 d-flex">
