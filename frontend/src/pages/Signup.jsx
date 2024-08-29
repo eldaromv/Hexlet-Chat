@@ -74,7 +74,7 @@ const Signup = () => {
                   initialValues={{ nickname: '', password: '', passwordConfirm: '' }}
                   onSubmit={handleFormSubmit}
                   validationSchema={signupSchema}
-                  validateOnChange={false}
+                  validateOnChange
                 >
                   {({
                     handleSubmit, handleChange, values, errors,
