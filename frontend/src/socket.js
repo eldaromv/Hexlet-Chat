@@ -1,4 +1,4 @@
-import { io } from 'socket.io-client';
+import { io } from 'socket.io';
 
 const URL = process.env.SOCKET_URL;
 const socket = io(URL);
