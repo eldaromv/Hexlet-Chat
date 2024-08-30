@@ -4,7 +4,7 @@
 ![ESLint](https://github.com/eldaromv/frontend-project-12/actions/workflows/git-eslint.yml/badge.svg)
 
 
-https://frontend-project-12-x0nw.onrender.com
+Demo: https://frontend-project-12-1-hi9m.onrender.com
 
 ## Hexlet Chat
 
