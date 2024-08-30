@@ -1,5 +1,8 @@
 import { io } from 'socket.io-client';
+import getSocketURL from './socketConfig';
 
-const socket = io();
+const URL = getSocketURL();
+
+const socket = io(URL);
 
 export default socket;
