@@ -27,8 +27,16 @@ app.post('/api/v1/login', (req, res) => {
 
 app.post('/api/v1/signup', (req, res) => {
   const { username, password } = req.body;
-  users.push({ username, password, token: 'newtoken' });
-  res.status(201).json({ message: 'User registered successfully' });
+
+  const existingUser = users.find((u) => u.username === username);
+  if (existingUser) {
+    return res.status(400).json({ error: 'Username already exists' });
+  }
+
+  const newUser = { username, password, token: 'newtoken' };
+  users.push(newUser);
+
+  res.status(201).json({ message: 'User registered successfully', token: newUser.token });
 });
 
 app.use(express.static(path.join(__dirname, '..', 'build')));
