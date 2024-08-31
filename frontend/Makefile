@@ -2,10 +2,13 @@ install:
 	npm ci
 
 start:
-	npm start
+	npx start-server -s ./build
 
+front:
+	npm run start
+	
 build:
-	npm build
+	npm run build
 
 lint:
 	npx eslint .
