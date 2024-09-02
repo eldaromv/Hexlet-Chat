@@ -47,8 +47,8 @@ const Signup = () => {
         setErrors({ nickname: t('form.errors.userExists') });
         break;
       }
-        default: {
-          setErrors({ nickname: t('form.errors.nickname'), password: t('form.errors.password'), passwordConfirm: t('form.errors.passwordConfirm') });
+      default: {
+        setErrors({ nickname: t('form.errors.nickname'), password: t('form.errors.password'), passwordConfirm: t('form.errors.passwordConfirm') });
       }
       }
     }
