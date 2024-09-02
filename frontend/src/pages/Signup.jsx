@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable indent */
 import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -9,15 +9,18 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
 import { useSignupMutation } from '../api/auth';
 import { appPaths } from '../routes';
-import useAuth from '../hooks';
+import { setUserData } from '../store/slices/appSlice';
 
 const Signup = () => {
-  const { logIn } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [signup] = useSignupMutation();
+
   const signupSchema = Yup.object().shape({
     nickname: Yup.string()
       .required(t('form.errors.required'))
@@ -30,6 +33,7 @@ const Signup = () => {
       .required(t('form.errors.required'))
       .oneOf([Yup.ref('password'), null], t('form.errors.passwordMustMatch')),
   });
+
   const handleFormSubmit = async (values, { setErrors }) => {
     const { nickname, password } = values;
     const user = {
@@ -38,21 +42,24 @@ const Signup = () => {
     };
     const { data, error } = await signup(user);
     if (data) {
-      logIn(data.token, nickname);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('nickname', nickname);
+      dispatch(setUserData({ token: data.token, nickname }));
       navigate(appPaths.home());
     }
     if (error) {
       switch (error.status) {
-      case 409: {
-        setErrors({ nickname: t('form.errors.userExists') });
-        break;
-      }
-      default: {
-        setErrors({ nickname: t('form.errors.nickname'), password: t('form.errors.password'), passwordConfirm: t('form.errors.passwordConfirm') });
-      }
+        case 409: {
+          setErrors({ nickname: t('form.errors.userExists') });
+          break;
+        }
+        default: {
+          setErrors({ nickname: t('form.errors.nickname'), password: t('form.errors.password'), passwordConfirm: t('form.errors.passwordConfirm') });
+        }
       }
     }
   };
+
   return (
     <Container className="mb-auto mt-auto">
       <Row className="justify-content-center">
@@ -67,7 +74,7 @@ const Signup = () => {
                   initialValues={{ nickname: '', password: '', passwordConfirm: '' }}
                   onSubmit={handleFormSubmit}
                   validationSchema={signupSchema}
-                  validateOnChange={false}
+                  validateOnChange
                 >
                   {({
                     handleSubmit, handleChange, values, errors,
@@ -76,17 +83,41 @@ const Signup = () => {
                       <h1>{t('signupPage.title')}</h1>
                       <Form.Group className="mb-3">
                         <Form.Label htmlFor="nickname">{t('signupPage.nickname')}</Form.Label>
-                        <Form.Control required id="nickname" value={values.nickname} onChange={handleChange} type="text" name="nickname" isInvalid={!!errors.nickname} />
+                        <Form.Control
+                          required
+                          id="nickname"
+                          value={values.nickname}
+                          onChange={handleChange}
+                          type="text"
+                          name="nickname"
+                          isInvalid={!!errors.nickname}
+                        />
                         <Form.Control.Feedback type="invalid">{errors.nickname}</Form.Control.Feedback>
                       </Form.Group>
                       <Form.Group className="mb-3">
                         <Form.Label htmlFor="password">{t('signupPage.password')}</Form.Label>
-                        <Form.Control required id="password" value={values.password} onChange={handleChange} type="password" name="password" isInvalid={!!errors.password} />
+                        <Form.Control
+                          required
+                          id="password"
+                          value={values.password}
+                          onChange={handleChange}
+                          type="password"
+                          name="password"
+                          isInvalid={!!errors.password}
+                        />
                         <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                       </Form.Group>
                       <Form.Group className="mb-3">
                         <Form.Label htmlFor="passwordConfirm">{t('signupPage.passwordConfirm')}</Form.Label>
-                        <Form.Control required id="passwordConfirm" value={values.passwordConfirm} onChange={handleChange} type="password" name="passwordConfirm" isInvalid={!!errors.passwordConfirm} />
+                        <Form.Control
+                          required
+                          id="passwordConfirm"
+                          value={values.passwordConfirm}
+                          onChange={handleChange}
+                          type="password"
+                          name="passwordConfirm"
+                          isInvalid={!!errors.passwordConfirm}
+                        />
                         <Form.Control.Feedback type="invalid">{errors.passwordConfirm}</Form.Control.Feedback>
                       </Form.Group>
                       <Button type="submit" className="w-100" variant="outline-primary">{t('signupPage.button')}</Button>
