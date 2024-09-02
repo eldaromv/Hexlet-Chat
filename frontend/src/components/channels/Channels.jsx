@@ -10,33 +10,37 @@ import {
   useGetChannelsQuery,
 } from '../../api/channels';
 import Channel from './Channel';
-import { changeChannel, setChannelModal, setUserData } from '../../store/slices/appSlice';
+import { changeChannel, setChannelModal } from '../../store/slices/appSlice';
 import ModalContainer from '../modals';
 import socket from '../../socket';
+import useAuth from '../../hooks';
 import { appPaths } from '../../routes';
+import { useGetMessagesQuery } from '../../api/messages';
 
 const Channels = () => {
   const { data: channels = [], error: channelError } = useGetChannelsQuery();
+  const { refetch } = useGetMessagesQuery();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentChannelId = useSelector((state) => state.app.currentChannelId);
   const navigate = useNavigate();
+  const { logOut } = useAuth();
   const defaultChannel = { id: '1', name: 'general' };
 
   const handleShowModal = (modalName, channel = { id: '', name: '' }) => {
     dispatch(setChannelModal({ id: channel.id, name: channel.name, modalName }));
   };
 
-  if (currentChannelId === undefined) {
-    dispatch(changeChannel(defaultChannel));
-  }
-
   useEffect(() => {
     if (channelError?.status === 401) {
-      dispatch(setUserData({ nickname: '', token: null }));
-      localStorage.removeItem('token');
-      localStorage.removeItem('nickname');
+      logOut();
       navigate(appPaths.login());
+    }
+  }, [channelError, navigate, logOut]);
+
+  useEffect(() => {
+    if (currentChannelId === undefined) {
+      dispatch(changeChannel(defaultChannel));
     }
 
     const handleNewChannel = (channel) => {
@@ -50,12 +54,13 @@ const Channels = () => {
         undefined,
         (draft) => draft.filter((curChannels) => curChannels.id !== id),
       ));
+      refetch();
     };
     const handleRenameChannel = ({ id, name }) => {
       dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
-        const channel = draft;
-        const index = channel.findIndex((curChannels) => curChannels.id === id);
-        channel[index].name = name;
+        const index = draft.findIndex((curChannels) => curChannels.id === id);
+        // eslint-disable-next-line no-param-reassign
+        draft[index].name = name;
       }));
     };
     socket.on('newChannel', handleNewChannel);
@@ -66,7 +71,7 @@ const Channels = () => {
       socket.off('removeChannel');
       socket.off('renameChannel');
     };
-  }, [dispatch, channelError, navigate]);
+  }, [dispatch]);
 
   return (
     <Col xs="4" md="2" className="border-end px-0 bg-light flex-column h-100 d-flex">

@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { Formik } from 'formik';
 import { useNavigate, Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
@@ -10,17 +9,15 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import useAuth from '../hooks';
 import { useLoginMutation } from '../api/auth';
-import { setUserData } from '../store/slices/appSlice';
 import { appPaths } from '../routes';
 
 const Login = () => {
+  const { logIn } = useAuth();
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [login] = useLoginMutation();
-
+  const navigate = useNavigate();
   const submitForm = async (values, { setErrors }) => {
     const { nickname, password } = values;
     const user = {
@@ -29,9 +26,7 @@ const Login = () => {
     };
     const { data, error } = await login(user);
     if (data) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('nickname', nickname);
-      dispatch(setUserData({ token: data.token, nickname }));
+      logIn(data.token, nickname);
       navigate(appPaths.home());
     }
     if (error) {

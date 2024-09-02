@@ -4,29 +4,24 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearUserData } from '../store/slices/appSlice';
+import { useSelector } from 'react-redux';
+import useAuth from '../hooks';
 
 const Header = () => {
-  const dispatch = useDispatch();
+  const { logOut } = useAuth();
   const { t } = useTranslation();
   const app = useSelector((state) => state.app);
-
-  const logOutUser = () => {
-    dispatch(clearUserData());
-  };
-
   return (
     <Navbar expand="lg" className="shadow-sm bg-white">
       <Container>
         <Navbar.Brand>
-          <Link className="text-decoration-none text-black" to="/">{t('Hexlet Chat')}</Link>
+          <Link className="text-decoration-none text-black" to="/">Hexlet Chat</Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             {app.token ? (
-              <Button onClick={logOutUser} variant="primary">{t('header.logout')}</Button>
+              <Button onClick={() => logOut()} variant="primary">{t('header.logout')}</Button>
             ) : (
               ''
             )}
