@@ -43,14 +43,13 @@ const Signup = () => {
     }
     if (error) {
       switch (error.status) {
-        case 409: {
-          setErrors({ nickname: t('form.errors.userExists') });
-          break;
-        }
-        default: {
-          setErrors({ nickname: t('form.errors.nickname'), password: t('form.errors.password'), passwordConfirm: t('form.errors.passwordConfirm') });
-        }
+      case 409: {
+        setErrors({ nickname: t('form.errors.userExists') });
+        break;
+      }        default: {
+         setErrors({ nickname: t('form.errors.nickname'), password: t('form.errors.password'), passwordConfirm: t('form.errors.passwordConfirm') });
       }
+    }
     }
   };
   return (

@@ -31,17 +31,17 @@ const Login = () => {
     }
     if (error) {
       switch (error.status) {
-        case 401: {
-          setErrors({ password: t('form.errors.password') });
-          break;
-        }
-        case 'FETCH_ERROR': {
-          toast.error(t('toast.errorNetwork'));
-          break;
-        }
-        default: {
-          setErrors({ password: t('form.errors.password') });
-        }
+      case 401: {
+        setErrors({ password: t('form.errors.password') });
+        break;
+      }
+      case 'FETCH_ERROR': {
+        toast.error(t('toast.errorNetwork'));
+        break;
+      }
+      default: {
+        setErrors({ password: t('form.errors.password') });
+      }
       }
     }
   };
