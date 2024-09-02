@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Formik } from 'formik';
 import { useNavigate, Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
@@ -9,15 +10,17 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks';
+import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../api/auth';
+import { setUserData } from '../store/slices/appSlice';
 import { appPaths } from '../routes';
 
 const Login = () => {
-  const { logIn } = useAuth();
   const { t } = useTranslation();
-  const [login] = useLoginMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login] = useLoginMutation();
+
   const submitForm = async (values, { setErrors }) => {
     const { nickname, password } = values;
     const user = {
@@ -26,22 +29,24 @@ const Login = () => {
     };
     const { data, error } = await login(user);
     if (data) {
-      logIn(data.token, nickname);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('nickname', nickname);
+      dispatch(setUserData({ token: data.token, nickname }));
       navigate(appPaths.home());
     }
     if (error) {
       switch (error.status) {
-      case 401: {
-        setErrors({ password: t('form.errors.password') });
-        break;
-      }
-      case 'FETCH_ERROR': {
-        toast.error(t('toast.errorNetwork'));
-        break;
-      }
-      default: {
-        setErrors({ password: t('form.errors.password') });
-      }
+        case 401: {
+          setErrors({ password: t('form.errors.password') });
+          break;
+        }
+        case 'FETCH_ERROR': {
+          toast.error(t('toast.errorNetwork'));
+          break;
+        }
+        default: {
+          setErrors({ password: t('form.errors.password') });
+        }
       }
     }
   };
