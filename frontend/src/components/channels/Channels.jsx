@@ -2,7 +2,7 @@ import Nav from 'react-bootstrap/Nav';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -18,6 +18,7 @@ import { setChannelModal } from '../../store/slices/modalSlice';
 
 const Channels = () => {
   const socket = useContext(SocketContext);
+
   const { data: channels = [], error: channelError } = useGetChannelsQuery();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -25,17 +26,8 @@ const Channels = () => {
   const navigate = useNavigate();
   const defaultChannel = { id: '1', name: 'general' };
 
-  const [isCreatingChannel, setIsCreatingChannel] = useState(false);
-
   const handleShowModal = (modalName, channel = { id: '', name: '' }) => {
     dispatch(setChannelModal({ id: channel.id, name: channel.name, modalName }));
-  };
-
-  const handleCreateChannelClick = () => {
-    if (!isCreatingChannel) {
-      setIsCreatingChannel(true);
-      handleShowModal('adding');
-    }
   };
 
   if (currentChannelId === undefined) {
@@ -54,9 +46,7 @@ const Channels = () => {
       dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
         draft.push(channel);
       }));
-      setIsCreatingChannel(false);
     };
-
     const handleRemoveChannel = ({ id }) => {
       dispatch(channelsApi.util.updateQueryData(
         'getChannels',
@@ -64,20 +54,16 @@ const Channels = () => {
         (draft) => draft.filter((curChannels) => curChannels.id !== id),
       ));
     };
-    /* eslint-disable no-param-reassign */
     const handleRenameChannel = ({ id, name }) => {
       dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
-        const index = draft.findIndex((curChannels) => curChannels.id === id);
-        if (index !== -1) {
-          draft[index].name = name;
-        }
+        const channel = draft;
+        const index = channel.findIndex((curChannels) => curChannels.id === id);
+        channel[index].name = name;
       }));
     };
-
     socket.on('newChannel', handleNewChannel);
     socket.on('removeChannel', handleRemoveChannel);
     socket.on('renameChannel', handleRenameChannel);
-
     return () => {
       socket.off('newChannel');
       socket.off('removeChannel');
@@ -89,7 +75,7 @@ const Channels = () => {
     <Col xs="4" md="2" className="border-end px-0 bg-light flex-column h-100 d-flex">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
         <b>{t('channels.title')}</b>
-        <Button size="sm" variant="outline-primary" onClick={handleCreateChannelClick}>
+        <Button size="sm" variant="outline-primary" onClick={() => handleShowModal('adding')}>
           +
         </Button>
       </div>
