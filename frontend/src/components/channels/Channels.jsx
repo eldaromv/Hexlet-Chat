@@ -35,7 +35,6 @@ const Channels = () => {
     if (!isCreatingChannel) {
       setIsCreatingChannel(true);
       handleShowModal('adding');
-      setTimeout(() => setIsCreatingChannel(false), 500);
     }
   };
 
@@ -55,6 +54,7 @@ const Channels = () => {
       dispatch(channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
         draft.push(channel);
       }));
+      setIsCreatingChannel(false);
     };
 
     const handleRemoveChannel = ({ id }) => {
