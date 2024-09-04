@@ -22,7 +22,7 @@ const ModalContainer = () => {
   const channelsNames = channels.map((channel) => channel.name);
   const channelNameSchema = Yup.object().shape({
     channelName: Yup.string()
-      .notOneOf(channelsNames, t('channelExists'))
+      .notOneOf(channelsNames, t('form.errors.channelExists'))
       .min(3, t('form.errors.range'))
       .max(20, t('form.errors.range'))
       .required(t('form.errors.required')),

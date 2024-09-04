@@ -74,10 +74,11 @@ const Signup = () => {
                   initialValues={{ nickname: '', password: '', passwordConfirm: '' }}
                   onSubmit={handleFormSubmit}
                   validationSchema={signupSchema}
-                  validateOnChange
+                  validateOnChange={false}
+                  validateOnBlur
                 >
                   {({
-                    handleSubmit, handleChange, values, errors,
+                    handleSubmit, handleBlur, handleChange, values, errors, touched,
                   }) => (
                     <Form onSubmit={handleSubmit} className="form">
                       <h1>{t('signupPage.title')}</h1>
@@ -88,9 +89,10 @@ const Signup = () => {
                           id="nickname"
                           value={values.nickname}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                           type="text"
                           name="nickname"
-                          isInvalid={!!errors.nickname}
+                          isInvalid={touched.nickname && !!errors.nickname}
                         />
                         <Form.Control.Feedback type="invalid">{errors.nickname}</Form.Control.Feedback>
                       </Form.Group>
@@ -101,9 +103,10 @@ const Signup = () => {
                           id="password"
                           value={values.password}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                           type="password"
                           name="password"
-                          isInvalid={!!errors.password}
+                          isInvalid={touched.password && !!errors.password}
                         />
                         <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                       </Form.Group>
@@ -114,9 +117,10 @@ const Signup = () => {
                           id="passwordConfirm"
                           value={values.passwordConfirm}
                           onChange={handleChange}
+                          onBlur={handleBlur}
                           type="password"
                           name="passwordConfirm"
-                          isInvalid={!!errors.passwordConfirm}
+                          isInvalid={touched.passwordConfirm && !!errors.passwordConfirm}
                         />
                         <Form.Control.Feedback type="invalid">{errors.passwordConfirm}</Form.Control.Feedback>
                       </Form.Group>

@@ -1,6 +1,8 @@
 import Col from 'react-bootstrap/esm/Col';
 import { useDispatch, useSelector } from 'react-redux';
-import { useContext, useEffect, useRef } from 'react';
+import {
+  useContext, useEffect, useRef, useState, useCallback,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { messagesApi, useGetMessagesQuery } from '../../api/messages';
 import Message from './Message';
@@ -16,18 +18,47 @@ const Messages = () => {
   const currentChannelName = useSelector((state) => state.app.currentChannel.name);
   const filteredMessages = messages.filter((message) => message.channelId === currentChannelId);
   const messagesContainer = useRef();
+  const [isAutoScroll, setIsAutoScroll] = useState(true);
+
+  const scrollToBottom = useCallback(() => {
+    if (messagesContainer.current && isAutoScroll) {
+      messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight;
+    }
+  }, [isAutoScroll]);
+
   useEffect(() => {
+    scrollToBottom();
+  }, [filteredMessages, scrollToBottom]);
+
+  useEffect(() => {
+    const container = messagesContainer.current;
+
     const handleNewMessage = (newMessage) => {
       dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (draft) => {
         draft.push(newMessage);
       }));
-      messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight;
+      if (isAutoScroll) {
+        scrollToBottom();
+      }
     };
+
+    const handleScroll = () => {
+      if (container) {
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        const isAtBottom = scrollTop >= scrollHeight - clientHeight - 10;
+        setIsAutoScroll(isAtBottom);
+      }
+    };
+
     socket.on('newMessage', handleNewMessage);
+    container.addEventListener('scroll', handleScroll);
+
     return () => {
       socket.off('newMessage');
+      container.removeEventListener('scroll', handleScroll);
     };
-  }, [socket, dispatch]);
+  }, [socket, dispatch, scrollToBottom, isAutoScroll]);
+
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
