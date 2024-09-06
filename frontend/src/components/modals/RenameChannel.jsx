@@ -24,7 +24,7 @@ const RenameChannel = (props) => {
     try {
       const { channelName, channelId } = values;
       const data = {
-        name: filter.clean(channelName),
+        name: filter.clean(channelName.trim()),
         removable: true,
         id: channelId,
       };
@@ -54,9 +54,9 @@ const RenameChannel = (props) => {
           onSubmit={renameChannel}
         >
           {({
-            values, handleChange, handleSubmit, errors,
+            values, handleChange, handleSubmit, errors, isSubmitting,
           }) => (
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={isSubmitting ? () => { } : handleSubmit}>
               <Form.Label htmlFor="channelName" visuallyHidden>{t('form.labels.channelName')}</Form.Label>
               <Form.Control
                 ref={input}
