@@ -42,8 +42,6 @@ const Signup = () => {
     };
     const { data, error } = await signup(user);
     if (data) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('nickname', nickname);
       dispatch(setUserData({ token: data.token, nickname }));
       navigate(appPaths.home());
     }
@@ -74,11 +72,10 @@ const Signup = () => {
                   initialValues={{ nickname: '', password: '', passwordConfirm: '' }}
                   onSubmit={handleFormSubmit}
                   validationSchema={signupSchema}
-                  validateOnChange={false}
-                  validateOnBlur
+                  validateOnChange
                 >
                   {({
-                    handleSubmit, handleBlur, handleChange, values, errors, touched,
+                    handleSubmit, handleChange, values, errors,
                   }) => (
                     <Form onSubmit={handleSubmit} className="form">
                       <h1>{t('signupPage.title')}</h1>
@@ -89,10 +86,9 @@ const Signup = () => {
                           id="nickname"
                           value={values.nickname}
                           onChange={handleChange}
-                          onBlur={handleBlur}
                           type="text"
                           name="nickname"
-                          isInvalid={touched.nickname && !!errors.nickname}
+                          isInvalid={!!errors.nickname}
                         />
                         <Form.Control.Feedback type="invalid">{errors.nickname}</Form.Control.Feedback>
                       </Form.Group>
@@ -103,10 +99,9 @@ const Signup = () => {
                           id="password"
                           value={values.password}
                           onChange={handleChange}
-                          onBlur={handleBlur}
                           type="password"
                           name="password"
-                          isInvalid={touched.password && !!errors.password}
+                          isInvalid={!!errors.password}
                         />
                         <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                       </Form.Group>
@@ -117,10 +112,9 @@ const Signup = () => {
                           id="passwordConfirm"
                           value={values.passwordConfirm}
                           onChange={handleChange}
-                          onBlur={handleBlur}
                           type="password"
                           name="passwordConfirm"
-                          isInvalid={touched.passwordConfirm && !!errors.passwordConfirm}
+                          isInvalid={!!errors.passwordConfirm}
                         />
                         <Form.Control.Feedback type="invalid">{errors.passwordConfirm}</Form.Control.Feedback>
                       </Form.Group>
