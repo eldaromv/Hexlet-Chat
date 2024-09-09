@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import * as filter from 'leo-profanity';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import { Send } from 'react-bootstrap-icons';
@@ -6,7 +7,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useAddMessageMutation } from '../../api/messages';
-import { filter } from '../../context/filter';
 
 const Message = () => {
   const currentChannelId = useSelector((state) => state.app.currentChannel.id);

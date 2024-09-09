@@ -11,7 +11,6 @@ import Header from './components/Header';
 import { appPaths } from './routes';
 import PrivateRoute from './components/PrivateRoute';
 import { socket, SocketContext } from './context/socket';
-import { filter, FilterContext } from './context/filter';
 
 const rollbarConfig = {
   accessToken: process.env.REACT_APP_TOKEN_ACCESS,
@@ -23,16 +22,14 @@ const App = () => (
     <ErrorBoundary>
       <BrowserRouter>
         <SocketContext.Provider value={socket}>
-          <FilterContext.Provider value={filter}>
-            <Header />
-            <Routes>
-              <Route path={appPaths.notFound()} element={<NotFound />} />
-              <Route path={appPaths.home()} element={<PrivateRoute><Home /></PrivateRoute>} />
-              <Route path={appPaths.login()} element={<Login />} />
-              <Route path={appPaths.signup()} element={<Signup />} />
-            </Routes>
-            <ToastContainer />
-          </FilterContext.Provider>
+          <Header />
+          <Routes>
+            <Route path={appPaths.notFound()} element={<NotFound />} />
+            <Route path={appPaths.home()} element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path={appPaths.login()} element={<Login />} />
+            <Route path={appPaths.signup()} element={<Signup />} />
+          </Routes>
+          <ToastContainer />
         </SocketContext.Provider>
       </BrowserRouter>
     </ErrorBoundary>

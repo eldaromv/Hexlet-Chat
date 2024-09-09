@@ -1,22 +1,63 @@
 import Col from 'react-bootstrap/esm/Col';
-import { useSelector } from 'react-redux';
-import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  useContext, useEffect, useRef, useState, useCallback,
+} from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetMessagesQuery } from '../../api/messages';
+import { messagesApi, useGetMessagesQuery } from '../../api/messages';
 import Message from './Message';
+import { SocketContext } from '../../context/socket';
 
 const Messages = () => {
-  const MessagesEnd = useRef();
+  const socket = useContext(SocketContext);
 
   const { data: messages = [] } = useGetMessagesQuery();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const currentChannelId = useSelector((state) => state.app.currentChannel.id);
   const currentChannelName = useSelector((state) => state.app.currentChannel.name);
   const filteredMessages = messages.filter((message) => message.channelId === currentChannelId);
+  const messagesContainer = useRef();
+  const [isAutoScroll, setIsAutoScroll] = useState(true);
+
+  const scrollToBottom = useCallback(() => {
+    if (messagesContainer.current && isAutoScroll) {
+      messagesContainer.current.scrollTop = messagesContainer.current.scrollHeight;
+    }
+  }, [isAutoScroll]);
 
   useEffect(() => {
-    MessagesEnd.current?.scrollIntoView();
-  }, [filteredMessages]);
+    scrollToBottom();
+  }, [filteredMessages, scrollToBottom]);
+
+  useEffect(() => {
+    const container = messagesContainer.current;
+
+    const handleNewMessage = (newMessage) => {
+      dispatch(messagesApi.util.updateQueryData('getMessages', undefined, (draft) => {
+        draft.push(newMessage);
+      }));
+      if (isAutoScroll) {
+        scrollToBottom();
+      }
+    };
+
+    const handleScroll = () => {
+      if (container) {
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        const isAtBottom = scrollTop >= scrollHeight - clientHeight - 10;
+        setIsAutoScroll(isAtBottom);
+      }
+    };
+
+    socket.on('newMessage', handleNewMessage);
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      socket.off('newMessage');
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [socket, dispatch, scrollToBottom, isAutoScroll]);
 
   return (
     <Col className="p-0 h-100">
@@ -31,7 +72,7 @@ const Messages = () => {
             {t('messages', { count: filteredMessages.length })}
           </span>
         </div>
-        <div className="overflow-auto px-5">
+        <div className="overflow-auto px-5" ref={messagesContainer}>
           {filteredMessages.map((message) => (
             <div className="text-break mb-2" key={message.id}>
               <b>{message.username}</b>
@@ -39,7 +80,6 @@ const Messages = () => {
               {message.message}
             </div>
           ))}
-          <div ref={MessagesEnd} />
         </div>
         <Message />
       </div>

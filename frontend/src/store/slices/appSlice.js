@@ -1,11 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
-export const defaultChannel = {
-  id: '1',
-  name: 'general',
-};
-
 const initialState = {
   token: localStorage.getItem('token') || null,
   username: localStorage.getItem('nickname') || '',
@@ -17,8 +12,6 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     setUserData(state, action) {
-      localStorage.setItem('token', action.payload.token);
-      localStorage.setItem('nickname', action.payload.nickname);
       state.token = action.payload.token;
       state.username = action.payload.nickname;
     },
