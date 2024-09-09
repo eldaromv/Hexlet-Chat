@@ -1,5 +1,6 @@
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import * as filter from 'leo-profanity';
 import { Formik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +9,6 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useUpdateChannelMutation } from '../../api/channels';
 import { changeChannel } from '../../store/slices/appSlice';
-import { filter } from '../../context/filter';
 
 const RenameChannel = (props) => {
   const dispatch = useDispatch();
